@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Coming Soon</title>
+    <style>
+        /* General Reset and Layout */
+        body, html {
+            margin: 0;
+            padding: 0;
+            font-family: 'Arial', sans-serif;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #121212;
+            color: white;
+            text-align: center;
+            position: relative;
+        }
+
+        /* Full-screen background image */
+        .background-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('https://source.unsplash.com/1600x900/?apartments'); /* Replace with your image URL */
+            background-size: cover;
+            background-position: center;
+            filter: blur(10px);
+            z-index: -1;
+        }
+
+        /* Container for the Coming Soon content */
+        .coming-soon-container {
+            position: relative;
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 15px;
+            padding: 50px 30px;
+            max-width: 700px;
+            width: 100%;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.7);
+        }
+
+        /* Title Styling */
+        .coming-soon-container h1 {
+            font-size: 48px;
+            color: #ffffff;
+            font-weight: 700;
+            margin-bottom: 20px;
+            letter-spacing: 3px;
+        }
+
+        /* Subtitle text */
+        .coming-soon-container p {
+            font-size: 20px;
+            color: #ddd;
+            margin-bottom: 30px;
+            font-weight: 500;
+        }
+
+        /* Countdown Styling */
+        .countdown {
+            display: flex;
+            justify-content: center;
+            font-size: 40px;
+            font-weight: 700;
+            color: #FF6F61;
+            gap: 30px;
+        }
+
+        .countdown div {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px 40px;
+            border-radius: 10px;
+        }
+
+        .countdown div span {
+            font-size: 30px;
+            font-weight: normal;
+            color: #fff;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 600px) {
+            .coming-soon-container {
+                padding: 30px 20px;
+            }
+            .coming-soon-container h1 {
+                font-size: 36px;
+            }
+            .countdown {
+                font-size: 28px;
+                flex-direction: column;
+            }
+        }
+
+        /* Call to Action Button */
+        .cta-button {
+            background-color: #FF6F61;
+            color: white;
+            padding: 15px 40px;
+            border-radius: 30px;
+            font-size: 20px;
+            text-decoration: none;
+            margin-top: 20px;
+            transition: background-color 0.3s ease;
+            display: inline-block;
+        }
+
+        .cta-button:hover {
+            background-color: #E65550;
+        }
+    </style>
+</head>
+<body>
+    <div class="background-image"></div>
+
+    <div class="coming-soon-container">
+        <h1>New Apartments Coming Soon!</h1>
+        <p>Your dream home is almost here. Stay tuned for an exclusive opportunity!</p>
+        
+        <div class="countdown" id="countdown">
+            <div><span id="days"></span> Days</div>
+            <div><span id="hours"></span> Hours</div>
+            <div><span id="minutes"></span> Minutes</div>
+            <div><span id="seconds"></span> Seconds</div>
+        </div>
+
+        <a href="#" class="cta-button">Get Notified</a>
+    </div>
+
+    <script>
+        // Set the date we're counting down to
+        var countDownDate = new Date("Feb 28, 2025 00:00:00").getTime();
+
+        // Update the countdown every 1 second
+        var x = setInterval(function() {
+
+            var now = new Date().getTime();
+            var distance = countDownDate - now;
+
+            // Time calculations
+            var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            // Display the result in the elements
+            document.getElementById("days").innerHTML = days;
+            document.getElementById("hours").innerHTML = hours;
+            document.getElementById("minutes").innerHTML = minutes;
+            document.getElementById("seconds").innerHTML = seconds;
+
+            // If the countdown is over, display a message
+            if (distance < 0) {
+                clearInterval(x);
+                document.getElementById("countdown").innerHTML = "We’re Live!";
+            }
+        }, 1000);
+    </script>
+</body>
+</html>
