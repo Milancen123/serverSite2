@@ -35,6 +35,10 @@
             border: 1px solid #ccc;
             border-radius: 5px;
         }
+        .radio-group {
+            display: flex;
+            gap: 10px;
+        }
         button {
             width: 100%;
             padding: 10px;
@@ -56,6 +60,19 @@
                 <label for="ime">Name:</label>
                 <input type="text" id="ime" name="ime" required>
             </div>
+            
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+
+            <div class="form-group">
+                <label>Gender:</label>
+                <div class="radio-group">
+                    <label><input type="radio" name="gender" value="male" required> Male</label>
+                    <label><input type="radio" name="gender" value="female" required> Female</label>
+                </div>
+            </div>
            
             <div class="form-group">
                 <label for="poruka">Message:</label>
@@ -70,15 +87,19 @@
             event.preventDefault();
             
             const name = document.getElementById("ime").value;
+            const email = document.getElementById("email").value;
             const message = document.getElementById("poruka").value;
+            const gender = document.querySelector('input[name="gender"]:checked').value;
             
             const data = {
                 name: name,
-                email: message
+                email: email,
+                gender: gender,
+                message: message
             };
             
             try {
-                const response = await fetch("https://milancen.duckdns.org/post-data ", {
+                const response = await fetch("https://milancen.duckdns.org/post-data", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json"
