@@ -103,7 +103,8 @@
                 <label for="city">City:</label>
                 <input type="text" id="city" name="city" required>
             </div>
-        <div class="form-group">
+
+            <div class="form-group">
                 <label for="state">State:</label>
                 <input type="text" id="state" name="state" required>
             </div>
@@ -146,49 +147,27 @@
     <div class="records-container">
         <h3>Distinct Countries</h3>
         <div id="distinct-records-list"></div>
-    </div>
+    </div>
 
     <script>
         document.getElementById("contact-form").addEventListener("submit", async function(event) {
             event.preventDefault();
             
-            const name = document.getElementById("ime").value;
-            const email = document.getElementById("email").value;
-            const city = document.getElementById("city").value;
-            const phone = document.getElementById("phone").value;
-            const country = document.getElementById("country").value;
-            const state = document.getElementById("state").value;
-            const zipcode = document.getElementById("zipcode").value;
-            const message = document.getElementById("poruka").value;
-            const gender = document.querySelector('input[name="gender"]:checked').value;
-            const date = document.getElementById("date").value;
-            
-            const data = {
-                name: name,
-                email: email,
-                phone: phone,
-                city:city,
-                country: country,
-                state: state,
-                zipcode: zipcode,
-                gender: gender,
-                date: date,
-                message: message
-            };
-            
+            const formData = new FormData(event.target);
+            const data = Object.fromEntries(formData.entries());
+
             try {
                 const response = await fetch("https://milancen.duckdns.org/post-data", {
                     method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
+                    headers: { "Content-Type": "application/json" },
                     body: JSON.stringify(data)
                 });
-                
+
                 if (response.ok) {
                     alert("Message sent successfully!");
-                    document.getElementById("contact-form").reset();
+                    event.target.reset();
                     fetchRecords();
+                    fetchDistinctCountries();
                 } else {
                     alert("Failed to send message. Please try again.");
                 }
@@ -196,27 +175,28 @@
                 alert("Error: " + error.message);
             }
         });
+
         async function fetchRecords() {
             try {
                 const [latestResponse, firstResponse] = await Promise.all([
                     fetch("https://milancen.duckdns.org/get-latest-records"),
                     fetch("https://milancen.duckdns.org/get-first-records")
                 ]);
-                
+
                 const latestRecords = await latestResponse.json();
                 const firstRecords = await firstResponse.json();
-                
+
                 const displayRecords = (records, elementId, count) => {
                     const list = document.getElementById(elementId);
                     list.innerHTML = "";
                     records.slice(0, count).forEach((record, index) => {
                         const div = document.createElement("div");
                         div.classList.add("record");
-                        div.innerHTML = <strong>${index + 1}. ${record.name}</strong> (${record.email}, ${record.phone}, ${record.country}, ${record.city}, ${record.state}, ${record.zipcode})<br>${record.gender} | ${record.date}<br>${record.message};
+                        div.innerHTML = `<strong>${index + 1}. ${record.name}</strong> (${record.email}, ${record.phone}, ${record.country}, ${record.city}, ${record.state}, ${record.zipcode})<br>${record.gender} | ${record.date}<br>${record.message}`;
                         list.appendChild(div);
                     });
                 };
-                
+
                 displayRecords(firstRecords, "first-records-list", 10);
                 displayRecords(latestRecords, "latest-records-list", 20);
             } catch (error) {
@@ -224,19 +204,29 @@
             }
         }
 
-        document.addEventListener("DOMContentLoaded", fetchRecords);
+        async function fetchDistinctCountries() {
+            try {
+                const response = await fetch("https://milancen.duckdns.org/get-distinct-countries");
+                const data = await response.json();
 
-        fetch('https://milancen.duckdns.org/get-distinct-countries')
-    .then(response => response.json())
-    .then(data => {
-        const recordsList = document.getElementById('distinct-records-list');
-        data.countries.forEach(country => {
-            const countryDiv = document.createElement('div');
-            countryDiv.textContent = country;
-            recordsList.appendChild(countryDiv);
+                const recordsList = document.getElementById("distinct-records-list");
+                recordsList.innerHTML = "";
+
+                data.countries.forEach(country => {
+                    const countryDiv = document.createElement("div");
+                    countryDiv.classList.add("record");
+                    countryDiv.textContent = country;
+                    recordsList.appendChild(countryDiv);
+                });
+            } catch (error) {
+                console.error("Error fetching countries:", error);
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            fetchRecords();
+            fetchDistinctCountries();
         });
-    })
-    .catch(error => console.error('Error fetching countries:', error));
     </script>
 </body>
 </html>
