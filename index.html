@@ -149,6 +149,11 @@
         <div id="distinct-records-list"></div>
     </div>
 
+
+<div id="records-container">
+ <h1>Total number of records in the database: <span id="totalNumber"></span></h1>
+</div>
+    
     <script>
         document.getElementById("contact-form").addEventListener("submit", async function(event) {
             event.preventDefault();
@@ -227,6 +232,19 @@
             fetchRecords();
             fetchDistinctCountries();
         });
+
+        async function fetchRecordCount() {
+    try {
+        const response = await fetch('https://milancen.duckdns.org/get-record-count');
+        const data = await response.json();
+        document.getElementById('totalNumber').textContent = data.totalRecords;
+    } catch (error) {
+        console.error('Error fetching record count:', error);
+    }
+}
+
+document.addEventListener('DOMContentLoaded', fetchRecordCount);
+
     </script>
 </body>
 </html>
