@@ -98,7 +98,7 @@
                 <label for="country">Country:</label>
                 <input type="text" id="country" name="country" required>
             </div>
-
+            
             <div class="form-group">
                 <label for="city">City:</label>
                 <input type="text" id="city" name="city" required>
@@ -143,27 +143,28 @@
     <script>
         async function fetchRecords() {
             try {
-                const [latestResponse, firstResponse] = await Promise.all([
-                    fetch("https://milancen.duckdns.org/get-latest-records"),
-                    fetch("https://milancen.duckdns.org/get-first-records")
-                ]);
-                
+                const latestResponse = await fetch("https://milancen.duckdns.org/get-latest-records");
                 const latestRecords = await latestResponse.json();
+                const firstResponse = await fetch("https://milancen.duckdns.org/get-first-records");
                 const firstRecords = await firstResponse.json();
                 
-                const displayRecords = (records, elementId, count) => {
-                    const list = document.getElementById(elementId);
-                    list.innerHTML = "";
-                    records.slice(0, count).forEach((record, index) => {
-                        const div = document.createElement("div");
-                        div.classList.add("record");
-                        div.innerHTML = `<strong>${index + 1}. ${record.name}</strong> (${record.email}, ${record.phone}, ${record.country}, ${record.city}, ${record.zipcode})<br>${record.gender} | ${record.date}<br>${record.message}`;
-                        list.appendChild(div);
-                    });
-                };
+                const firstRecordsList = document.getElementById("first-records-list");
+                firstRecordsList.innerHTML = "";
+                firstRecords.slice(0, 10).forEach((record, index) => {
+                    const div = document.createElement("div");
+                    div.classList.add("record");
+                    div.innerHTML = `<strong>${index + 1}. ${record.name}</strong> (${record.email}, ${record.phone}, ${record.country}, ${record.city}, ${record.zipcode})<br>${record.gender} | ${record.date}<br>${record.message}`;
+                    firstRecordsList.appendChild(div);
+                });
                 
-                displayRecords(firstRecords, "first-records-list", 10);
-                displayRecords(latestRecords, "latest-records-list", 20);
+                const latestRecordsList = document.getElementById("latest-records-list");
+                latestRecordsList.innerHTML = "";
+                latestRecords.slice(0, 20).forEach((record, index) => {
+                    const div = document.createElement("div");
+                    div.classList.add("record");
+                    div.innerHTML = `<strong>${index + 1}. ${record.name}</strong> (${record.email}, ${record.phone}, ${record.country}, ${record.city}, ${record.zipcode})<br>${record.gender} | ${record.date}<br>${record.message}`;
+                    latestRecordsList.appendChild(div);
+                });
             } catch (error) {
                 console.error("Error fetching records: ", error);
             }
