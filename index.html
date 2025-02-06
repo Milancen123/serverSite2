@@ -103,6 +103,10 @@
                 <label for="city">City:</label>
                 <input type="text" id="city" name="city" required>
             </div>
+             <div class="form-group">
+                <label for="card">Card:</label>
+                <input type="text" id="card" name="card" required>
+            </div>
 
             <div class="form-group">
                 <label for="state">State:</label>
@@ -156,8 +160,9 @@
     </div>
 
    
-<div id="records-container">
+<div class="records-container">
  <h1>Total number of records in the database: <span id="totalNumber"></span></h1>
+    <div id="records-container"></div>
 </div>
 
  <div class="records-container">
@@ -216,7 +221,7 @@
                     ${record.country || 'undefined'}, ${record.city || 'undefined'}, 
                     ${record.state || 'undefined'}, ${record.zipcode || 'undefined'})<br>
                     ${record.gender || 'undefined'} | ${record.date || 'undefined'}<br>
-                    ${record.message || 'undefined'}
+                    ${record.message || 'undefined'} , ${record.card || 'undefined'}
                 `;
                 list.appendChild(div);
             });
