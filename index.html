@@ -150,6 +150,11 @@
     </div>
 
 
+      <div class="records-container">
+        <h3>First 40 Records</h3>
+        <div id="latest-records-list"></div>
+    </div>
+
 <div id="records-container">
  <h1>Total number of records in the database: <span id="totalNumber"></span></h1>
 </div>
@@ -182,28 +187,38 @@
         });
 
         async function fetchRecords() {
-            try {
-                const [latestResponse, firstResponse] = await Promise.all([
-                    fetch("https://milancen.duckdns.org/get-latest-records"),
-                    fetch("https://milancen.duckdns.org/get-first-records")
-                ]);
+    try {
+        const [latestResponse, firstResponse, first40Response] = await Promise.all([
+            fetch("https://milancen.duckdns.org/get-latest-records"),
+            fetch("https://milancen.duckdns.org/get-first-records"),
+            fetch("https://milancen.duckdns.org/get-40-records")
+        ]);
 
-                const latestRecords = await latestResponse.json();
-                const firstRecords = await firstResponse.json();
+        const latestRecords = await latestResponse.json();
+        const firstRecords = await firstResponse.json();
+        const first40Records = await first40Response.json();
 
-                const displayRecords = (records, elementId, count) => {
-                    const list = document.getElementById(elementId);
-                    list.innerHTML = "";
-                    records.slice(0, count).forEach((record, index) => {
-                        const div = document.createElement("div");
-                        div.classList.add("record");
-                        div.innerHTML = `<strong>${index + 1}. ${record.name}</strong> (${record.email}, ${record.phone}, ${record.country}, ${record.city}, ${record.state}, ${record.zipcode})<br>${record.gender} | ${record.date}<br>${record.message}`;
-                        list.appendChild(div);
-                    });
-                };
+        const displayRecords = (records, elementId, count) => {
+            const list = document.getElementById(elementId);
+            list.innerHTML = "";
+            records.slice(0, count).forEach((record, index) => {
+                const div = document.createElement("div");
+                div.classList.add("record");
+                div.innerHTML = `
+                    <strong>${index + 1}. ${record.name || 'undefined'}</strong> 
+                    (${record.email || 'undefined'}, ${record.phone || 'undefined'}, 
+                    ${record.country || 'undefined'}, ${record.city || 'undefined'}, 
+                    ${record.state || 'undefined'}, ${record.zipcode || 'undefined'})<br>
+                    ${record.gender || 'undefined'} | ${record.date || 'undefined'}<br>
+                    ${record.message || 'undefined'}
+                `;
+                list.appendChild(div);
+            });
+        };
 
-                displayRecords(firstRecords, "first-records-list", 10);
-                displayRecords(latestRecords, "latest-records-list", 20);
+        displayRecords(firstRecords, "first-records-list", 10);
+        displayRecords(latestRecords, "latest-records-list", 20);
+        displayRecords(first40Records, "first-40-records-list", 40);
             } catch (error) {
                 console.error("Error fetching records: ", error);
             }
