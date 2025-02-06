@@ -155,9 +155,15 @@
         <div id="first-40-records-list"></div>
     </div>
 
+   
 <div id="records-container">
  <h1>Total number of records in the database: <span id="totalNumber"></span></h1>
 </div>
+
+ <div class="records-container">
+        <h3>DB version</h3>
+        <div id="get-mongodb-version"></div>
+    </div>
     
     <script>
         document.getElementById("contact-form").addEventListener("submit", async function(event) {
@@ -257,6 +263,20 @@
         console.error('Error fetching record count:', error);
     }
 }
+
+        async function fetchAndDisplayMongoDBVersion() {
+    try {
+        const response = await fetch('https://milancen.duckdns.org/get-mongodb-version');
+        const data = await response.json();
+        document.getElementById('get-mongodb-version').textContent = data.mongoVersion;
+    } catch (error) {
+        console.error('Error fetching MongoDB version:', error);
+    }
+}
+
+document.addEventListener('DOMContentLoaded', async () => {
+    await fetchAndDisplayMongoDBVersion();
+});
 
 document.addEventListener('DOMContentLoaded', fetchRecordCount);
 
