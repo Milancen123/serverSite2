@@ -238,6 +238,23 @@
         <h3>Users</h3>
         <div id="get-all-users"></div>
     </div>
+
+
+<div class="delete-user-container">
+    <h3>Delete User</h3>
+    <form id="delete-user-form">
+        <div class="delete-input-group">
+            <label for="delete-username">Username:</label>
+            <input type="text" id="delete-username" name="delete-username" required>
+        </div>
+        <button type="submit" class="delete-button">Delete</button>
+    </form>
+    <p id="delete-response-message"></p>
+</div>
+
+
+
+    
     <script>
         document.getElementById("contact-form").addEventListener("submit", async function(event) {
             event.preventDefault();
@@ -419,7 +436,46 @@ document.addEventListener('DOMContentLoaded', async () => {
 }
 
 document.addEventListener('DOMContentLoaded', fetchAndDisplayUsers);
-   
+
+
+
+async function deleteUser(event) {
+    event.preventDefault();
+
+    const username = document.getElementById('delete-username').value;
+    const responseMessage = document.getElementById('delete-response-message');
+
+    try {
+        const response = await fetch('https://milancen.duckdns.org/delete-user', {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify({ username })
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+
+        const result = await response.json();
+        console.log("✅ Server response:", result);
+
+        responseMessage.textContent = result.message || `User "${username}" deleted successfully!`;
+        responseMessage.style.color = 'green';
+    } catch (error) {
+        console.error("❌ Error deleting user:", error);
+        responseMessage.textContent = 'Failed to delete user. Check console for details.';
+        responseMessage.style.color = 'red';
+    }
+}
+
+document.getElementById('delete-user-form').addEventListener('submit', deleteUser);
+
+
+
+        
         
 document.addEventListener('DOMContentLoaded', fetchRecordCount);
 
