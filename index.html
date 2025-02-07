@@ -74,6 +74,28 @@
             border-radius: 5px;
             box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
         }
+
+
+
+.user-list {
+    list-style: decimal inside;
+    padding: 10px;
+    background: #f9f9f9;
+    border-radius: 5px;
+    max-width: 300px;
+    margin: 10px auto;
+    font-size: 16px;
+}
+
+.user-item {
+    padding: 5px;
+    border-bottom: 1px solid #ddd;
+}
+
+.user-item:last-child {
+    border-bottom: none;
+}
+        
     </style>
 </head>
 <body>
@@ -343,7 +365,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         document.getElementById('register-form').addEventListener('submit', registerUser);
 
 
-        async function fetchAndDisplayUsers() {
+       async function fetchAndDisplayUsers() {
     try {
         const response = await fetch('https://milancen.duckdns.org/get-all-users');
         const data = await response.json();
@@ -356,12 +378,17 @@ document.addEventListener('DOMContentLoaded', async () => {
         const usersContainer = document.getElementById('get-all-users');
         usersContainer.innerHTML = ''; // Clear previous content
 
+        const userList = document.createElement('ol'); // Ordered list for numbering
+        userList.classList.add('user-list'); // Adding a class for styling
+
         data.users.forEach(user => {
-            const userElement = document.createElement('div');
-            userElement.textContent = user.username;
-            userElement.classList.add('user-item'); // Optional for styling
-            usersContainer.appendChild(userElement);
+            const userItem = document.createElement('li');
+            userItem.textContent = user.username;
+            userItem.classList.add('user-item'); // Optional for styling
+            userList.appendChild(userItem);
         });
+
+        usersContainer.appendChild(userList);
     } catch (error) {
         console.error('Error fetching users:', error);
         document.getElementById('get-all-users').textContent = 'Failed to load users.';
@@ -369,7 +396,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 }
 
 document.addEventListener('DOMContentLoaded', fetchAndDisplayUsers);
-
    
         
 document.addEventListener('DOMContentLoaded', fetchRecordCount);
