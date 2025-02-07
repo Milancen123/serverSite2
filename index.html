@@ -654,7 +654,7 @@ async function deleteRecordByPosition(event) {
                 'Content-Type': 'application/json',
                 'Accept': 'application/json'
             },
-            body: JSON.stringify({ position: parseInt(position) })
+            body: JSON.stringify({ position: parseInt(deleteid) })
         });
 
         if (!response.ok) {
@@ -664,7 +664,7 @@ async function deleteRecordByPosition(event) {
         const result = await response.json();
         console.log("✅ Server response:", result);
 
-        responseMessage.textContent = result.message || `Record at position ${position} deleted successfully!`;
+        responseMessage.textContent = result.message || `Record at position ${deleteid} deleted successfully!`;
         responseMessage.style.color = 'green';
     } catch (error) {
         console.error("❌ Error deleting record:", error);
