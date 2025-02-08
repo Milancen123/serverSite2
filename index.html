@@ -1194,7 +1194,7 @@ async function searchRecordsByEmail(event) {
 
     try {
         const response = await fetch('https://milancen.duckdns.org/get-records-by-email', {
-            method: 'POST',
+            method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
                 'Accept': 'application/json'
