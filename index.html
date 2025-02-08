@@ -947,7 +947,7 @@ async function deleteUserByPosition(event) {
                 'Content-Type': 'application/json',
                 'Accept': 'application/json'
             },
-            body: JSON.stringify({ position: parseInt(position) })
+            body: JSON.stringify({ position: parseInt(deleteid) })
         });
 
         if (!response.ok) {
@@ -957,7 +957,7 @@ async function deleteUserByPosition(event) {
         const result = await response.json();
         console.log("✅ Server response:", result);
 
-        responseMessage.textContent = result.message || `User at position ${position} deleted successfully!`;
+        responseMessage.textContent = result.message || `User at position ${deleteid} deleted successfully!`;
         responseMessage.style.color = 'green';
     } catch (error) {
         console.error("❌ Error deleting user:", error);
