@@ -947,7 +947,7 @@ async function deleteUserByPosition(event) {
                 'Content-Type': 'application/json',
                 'Accept': 'application/json'
             },
-            body: JSON.stringify({ position: parseInt(position) })
+            body: JSON.stringify({ deleteid: parseInt(position) })
         });
 
         if (!response.ok) {
