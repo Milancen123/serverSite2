@@ -1005,7 +1005,7 @@ async function deleteRecordByPosition(event) {
                 'Content-Type': 'application/json',
                 'Accept': 'application/json'
             },
-            body: JSON.stringify({ position: parseInt(deleteid) })
+            body: JSON.stringify({ deleteid: parseInt(position) })
         });
 
         if (!response.ok) {
