@@ -284,6 +284,62 @@
 }
 
 
+.search-user-container {
+    margin-top: 20px;
+    padding: 15px;
+    border: 1px solid #ccc;
+    background-color: #f9f9f9;
+    border-radius: 5px;
+    max-width: 300px;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+}
+
+.search-user-field {
+    margin-bottom: 15px;
+}
+
+.search-user-field label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.search-user-field input {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    text-align: center;
+}
+
+.search-user-button {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    background-color: #007bff;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background 0.3s ease-in-out, transform 0.1s;
+    margin-top: 10px;
+}
+
+.search-user-button:hover {
+    background-color: #0056b3;
+}
+
+.search-user-button:active {
+    transform: scale(0.98);
+}
+
+#user-info {
+    margin-top: 10px;
+    font-weight: bold;
+    text-align: center;
+}
 
 
 
@@ -504,6 +560,31 @@
 </div>
 
 
+
+<div class="search-user-container">
+    <h3>Search User by Username</h3>
+    <form id="search-user-form">
+        <div class="search-user-field">
+            <label for="search-username">Enter Username:</label>
+            <input type="text" id="search-username" name="search-username" required>
+        </div>
+        <button type="submit" class="search-user-button">Search</button>
+    </form>
+    <div id="user-info"></div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+    
 
     
     
@@ -971,6 +1052,53 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 
+async function searchUser(event) {
+    event.preventDefault();
+
+    const username = document.getElementById('search-username').value;
+    const userInfoContainer = document.getElementById('user-info');
+
+    if (!username) {
+        userInfoContainer.innerHTML = '<p style="color:red;">Please enter a username.</p>';
+        return;
+    }
+
+    try {
+        const response = await fetch('https://milancen.duckdns.org/get-user', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify({ username })
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+
+        const userData = await response.json();
+        console.log("✅ Server response:", userData);
+
+        if (userData && Object.keys(userData).length > 0) {
+            userInfoContainer.innerHTML = `
+                <h4>User Information:</h4>
+                <p><strong>Username:</strong> ${userData.username}</p>
+                <p><strong>Email:</strong> ${userData.email || 'N/A'}</p>
+                <p><strong>Created At:</strong> ${userData.createdAt || 'N/A'}</p>
+            `;
+        } else {
+            userInfoContainer.innerHTML = '<p style="color:red;">User not found.</p>';
+        }
+    } catch (error) {
+        console.error("❌ Error fetching user:", error);
+        userInfoContainer.innerHTML = '<p style="color:red;">Failed to fetch user. Check console for details.</p>';
+    }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('search-user-form').addEventListener('submit', searchUser);
+});
 
 
         
