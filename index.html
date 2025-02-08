@@ -208,6 +208,24 @@
 
 
 
+.user-count-container {
+    margin-top: 20px;
+    padding: 15px;
+    border: 1px solid #ccc;
+    background-color: #f9f9f9;
+    border-radius: 5px;
+    max-width: 300px;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+#total-user-count {
+    font-size: 20px;
+    color: #007bff;
+}
 
 
 
@@ -412,6 +430,16 @@
     <p id="update-password-response"></p>
 </div>
 
+
+
+
+
+
+
+<div class="user-count-container">
+    <h3>Total Number of Users</h3>
+    <p id="total-user-count">Loading...</p>
+</div>
 
 
     
@@ -822,6 +850,19 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('update-password-form').addEventListener('submit', updatePassword);
 });
 
+async function fetchUserCount() {
+    try {
+        const response = await fetch('https://milancen.duckdns.org/get-user-count');
+        const data = await response.json();
+
+        document.getElementById('total-user-count').textContent = `Total Users: ${data.totalRec}`;
+    } catch (error) {
+        console.error("❌ Error fetching user count:", error);
+        document.getElementById('total-user-count').textContent = 'Failed to load user count.';
+    }
+}
+
+document.addEventListener('DOMContentLoaded', fetchUserCount);
 
 
 
