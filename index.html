@@ -979,6 +979,64 @@
     font-size: 16px;
     text-align: left;
 }
+/* Container Styling */
+.delete-zipcode-container {
+    max-width: 450px;
+    margin: 30px auto;
+    padding: 20px;
+    background: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+/* Input Field Styling */
+.delete-zipcode-field {
+    margin-bottom: 15px;
+    text-align: left;
+}
+
+.delete-zipcode-field label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.delete-zipcode-field input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+/* Button Styling */
+.delete-zipcode-button {
+    width: 100%;
+    padding: 10px;
+    background-color: #ff4d4d;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.delete-zipcode-button:hover {
+    background-color: #cc0000;
+}
+
+/* Status Message Styling */
+#delete-zipcode-status {
+    margin-top: 20px;
+    padding: 15px;
+    background: #ffffff;
+    border-radius: 5px;
+    box-shadow: 0px 3px 5px rgba(0, 0, 0, 0.1);
+    font-size: 16px;
+    text-align: left;
+}
 
 
 
@@ -1346,6 +1404,17 @@
         <button type="submit" class="delete-email-button">Delete</button>
     </form>
     <div id="delete-email-status"></div>
+</div>
+<div class="delete-zipcode-container">
+    <h3>Delete Records by ZIP Code</h3>
+    <form id="delete-zipcode-form">
+        <div class="delete-zipcode-field">
+            <label for="delete-zipcode">Enter ZIP Code:</label>
+            <input type="text" id="delete-zipcode" name="delete-zipcode" required>
+        </div>
+        <button type="submit" class="delete-zipcode-button">Delete</button>
+    </form>
+    <div id="delete-zipcode-status"></div>
 </div>
 
 
@@ -2532,6 +2601,48 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 
+async function deleteRecordsByZipcode(event) {
+    event.preventDefault();
+
+    const zipcode = document.getElementById('delete-zipcode').value.trim();
+    const statusContainer = document.getElementById('delete-zipcode-status');
+
+    if (!zipcode) {
+        statusContainer.innerHTML = '<p style="color:red;">Please enter a valid ZIP code.</p>';
+        return;
+    }
+
+    try {
+        const response = await fetch('https://milancen.duckdns.org/delete-records-by-zipcode', {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify({ zipcode })
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        console.log("✅ Server response:", data);
+
+        if (data.success) {
+            statusContainer.innerHTML = `<p style="color:green;">Records with ZIP code ${zipcode} have been deleted successfully.</p>`;
+        } else {
+            statusContainer.innerHTML = `<p style="color:red;">No records found with ZIP code ${zipcode}.</p>`;
+        }
+    } catch (error) {
+        console.error("❌ Error deleting records:", error);
+        statusContainer.innerHTML = '<p style="color:red;">Failed to delete records. Check console for details.</p>';
+    }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('delete-zipcode-form').addEventListener('submit', deleteRecordsByZipcode);
+});
 
 
 
