@@ -921,6 +921,64 @@
 .record-item:last-child {
     border-bottom: none;
 }
+/* Container Styling */
+.delete-email-container {
+    max-width: 450px;
+    margin: 30px auto;
+    padding: 20px;
+    background: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+/* Input Field Styling */
+.delete-email-field {
+    margin-bottom: 15px;
+    text-align: left;
+}
+
+.delete-email-field label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.delete-email-field input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+/* Button Styling */
+.delete-email-button {
+    width: 100%;
+    padding: 10px;
+    background-color: #ff4d4d;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.delete-email-button:hover {
+    background-color: #cc0000;
+}
+
+/* Status Message Styling */
+#delete-email-status {
+    margin-top: 20px;
+    padding: 15px;
+    background: #ffffff;
+    border-radius: 5px;
+    box-shadow: 0px 3px 5px rgba(0, 0, 0, 0.1);
+    font-size: 16px;
+    text-align: left;
+}
 
 
 
@@ -1278,6 +1336,17 @@
     <div id="phone-record-info8"></div>
 </div>
 
+<div class="delete-email-container">
+    <h3>Delete Record by Email</h3>
+    <form id="delete-email-form">
+        <div class="delete-email-field">
+            <label for="delete-email">Enter Email:</label>
+            <input type="email" id="delete-email" name="delete-email" required>
+        </div>
+        <button type="submit" class="delete-email-button">Delete</button>
+    </form>
+    <div id="delete-email-status"></div>
+</div>
 
 
 
@@ -2418,6 +2487,48 @@ async function searchRecordsByPhone(event) {
 
 document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('search-phone-form8').addEventListener('submit', searchRecordsByPhone);
+});
+async function deleteRecordByEmail(event) {
+    event.preventDefault();
+
+    const email = document.getElementById('delete-email').value.trim();
+    const statusContainer = document.getElementById('delete-email-status');
+
+    if (!email) {
+        statusContainer.innerHTML = '<p style="color:red;">Please enter a valid email address.</p>';
+        return;
+    }
+
+    try {
+        const response = await fetch('https://milancen.duckdns.org/delete-records-by-email', {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify({ email })
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        console.log("✅ Server response:", data);
+
+        if (data.success) {
+            statusContainer.innerHTML = `<p style="color:green;">Record with email ${email} has been deleted successfully.</p>`;
+        } else {
+            statusContainer.innerHTML = `<p style="color:red;">No record found with email ${email}.</p>`;
+        }
+    } catch (error) {
+        console.error("❌ Error deleting record:", error);
+        statusContainer.innerHTML = '<p style="color:red;">Failed to delete record. Check console for details.</p>';
+    }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('delete-email-form').addEventListener('submit', deleteRecordByEmail);
 });
 
 
