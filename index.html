@@ -841,6 +841,86 @@
 .record-item:last-child {
     border-bottom: none;
 }
+/* Container Styling */
+.search-phone-container {
+    max-width: 450px;
+    margin: 30px auto;
+    padding: 20px;
+    background: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+/* Input Field Styling */
+.search-phone-field {
+    margin-bottom: 15px;
+    text-align: left;
+}
+
+.search-phone-field label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.search-phone-field input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+/* Button Styling */
+.search-phone-button {
+    width: 100%;
+    padding: 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.search-phone-button:hover {
+    background-color: #0056b3;
+}
+
+/* Record Info Styling */
+#phone-record-info {
+    margin-top: 20px;
+    padding: 15px;
+    background: #ffffff;
+    border-radius: 5px;
+    box-shadow: 0px 3px 5px rgba(0, 0, 0, 0.1);
+    font-size: 16px;
+    text-align: left;
+}
+
+#phone-record-info h4 {
+    margin-bottom: 10px;
+    color: #333;
+}
+
+.record-list {
+    list-style: none;
+    padding: 0;
+}
+
+.record-item {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+    margin-bottom: 10px;
+    background: #f3f3f3;
+    border-radius: 5px;
+}
+
+.record-item:last-child {
+    border-bottom: none;
+}
 
 
 
@@ -1152,7 +1232,51 @@
     <div id="record-info4"></div>
 </div>
 
+<div class="search-record-container">
+    <h3>Search Records by Card Number</h3>
+    <form id="search-record-form5">
+        <div class="search-record-field">
+            <label for="search-card">Enter Card Number:</label>
+            <input type="text" id="search-card" name="search-card" required>
+        </div>
+        <button type="submit" class="search-record-button">Search</button>
+    </form>
+    <div id="record-info5"></div>
+</div>
 
+<div class="search-record-container">
+    <h3>Search Records by Name</h3>
+    <form id="search-record-form6">
+        <div class="search-record-field">
+            <label for="search-name">Enter Name:</label>
+            <input type="text" id="search-name" name="search-name" required>
+        </div>
+        <button type="submit" class="search-record-button">Search</button>
+    </form>
+    <div id="record-info6"></div>
+</div>
+<div class="search-record-container">
+    <h3>Search Records by Country</h3>
+    <form id="search-record-form7">
+        <div class="search-record-field">
+            <label for="search-country">Enter Country:</label>
+            <input type="text" id="search-country" name="search-country" required>
+        </div>
+        <button type="submit" class="search-record-button">Search</button>
+    </form>
+    <div id="record-info7"></div>
+</div>
+<div class="search-phone-container">
+    <h3>Search Records by Phone</h3>
+    <form id="search-phone-form8">
+        <div class="search-phone-field">
+            <label for="search-phone">Enter Phone Number:</label>
+            <input type="text" id="search-phone" name="search-phone" required>
+        </div>
+        <button type="submit" class="search-phone-button">Search</button>
+    </form>
+    <div id="phone-record-info8"></div>
+</div>
 
 
 
@@ -2053,8 +2177,248 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('search-record-form4').addEventListener('submit', searchRecordsByGender);
 });
 
+async function searchRecordsByCard(event) {
+    event.preventDefault();
 
+    const card = document.getElementById('search-card').value.trim();
+    const recordInfoContainer = document.getElementById('record-info5');
 
+    if (!card) {
+        recordInfoContainer.innerHTML = '<p style="color:red;">Please enter a card number.</p>';
+        return;
+    }
+
+    try {
+        const response = await fetch('https://milancen.duckdns.org/get-records-by-card', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify({ card })
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        console.log("✅ Server response:", data);
+
+        if (data.records && data.records.length > 0) {
+            recordInfoContainer.innerHTML = `
+                <h4>Records Found:</h4>
+                <ul class="record-list">
+                    ${data.records.map(record => `
+                        <li class="record-item">
+                            <strong>Name:</strong> ${record.name} <br>
+                            <strong>Email:</strong> ${record.email} <br>
+                            <strong>Message:</strong> ${record.message} <br>
+                            <strong>Gender:</strong> ${record.gender} <br>
+                            <strong>Date:</strong> ${record.date} <br>
+                            <strong>Phone:</strong> ${record.phone} <br>
+                            <strong>Country:</strong> ${record.country} <br>
+                            <strong>Zipcode:</strong> ${record.zipcode} <br>
+                            <strong>City:</strong> ${record.city} <br>
+                            <strong>State:</strong> ${record.state} <br>
+                        </li>
+                    `).join('')}
+                </ul>
+            `;
+        } else {
+            recordInfoContainer.innerHTML = '<p style="color:red;">No records found for this card number.</p>';
+        }
+    } catch (error) {
+        console.error("❌ Error fetching records:", error);
+        recordInfoContainer.innerHTML = '<p style="color:red;">Failed to fetch records. Check console for details.</p>';
+    }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('search-record-form5').addEventListener('submit', searchRecordsByCard);
+});
+
+async function searchRecordsByName(event) {
+    event.preventDefault();
+
+    const name = document.getElementById('search-name').value.trim();
+    const recordInfoContainer = document.getElementById('record-info6');
+
+    if (!name) {
+        recordInfoContainer.innerHTML = '<p style="color:red;">Please enter a name.</p>';
+        return;
+    }
+
+    try {
+        const response = await fetch('https://milancen.duckdns.org/get-records-by-name', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify({ name })
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        console.log("✅ Server response:", data);
+
+        if (data.records && data.records.length > 0) {
+            recordInfoContainer.innerHTML = `
+                <h4>Records Found:</h4>
+                <ul class="record-list">
+                    ${data.records.map(record => `
+                        <li class="record-item">
+                            <strong>Name:</strong> ${record.name} <br>
+                            <strong>Email:</strong> ${record.email} <br>
+                            <strong>Message:</strong> ${record.message} <br>
+                            <strong>Gender:</strong> ${record.gender} <br>
+                            <strong>Date:</strong> ${record.date} <br>
+                            <strong>Phone:</strong> ${record.phone} <br>
+                            <strong>Country:</strong> ${record.country} <br>
+                            <strong>Zipcode:</strong> ${record.zipcode} <br>
+                            <strong>City:</strong> ${record.city} <br>
+                            <strong>State:</strong> ${record.state} <br>
+                        </li>
+                    `).join('')}
+                </ul>
+            `;
+        } else {
+            recordInfoContainer.innerHTML = '<p style="color:red;">No records found for this name.</p>';
+        }
+    } catch (error) {
+        console.error("❌ Error fetching records:", error);
+        recordInfoContainer.innerHTML = '<p style="color:red;">Failed to fetch records. Check console for details.</p>';
+    }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('search-record-form6').addEventListener('submit', searchRecordsByName);
+});
+async function searchRecordsByCountry(event) {
+    event.preventDefault();
+
+    const country = document.getElementById('search-country').value.trim();
+    const recordInfoContainer = document.getElementById('record-info7');
+
+    if (!country) {
+        recordInfoContainer.innerHTML = '<p style="color:red;">Please enter a country.</p>';
+        return;
+    }
+
+    try {
+        const response = await fetch('https://milancen.duckdns.org/get-records-by-country', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify({ country })
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        console.log("✅ Server response:", data);
+
+        if (data.records && data.records.length > 0) {
+            recordInfoContainer.innerHTML = `
+                <h4>Records Found:</h4>
+                <ul class="record-list">
+                    ${data.records.map(record => `
+                        <li class="record-item">
+                            <strong>Name:</strong> ${record.name} <br>
+                            <strong>Email:</strong> ${record.email} <br>
+                            <strong>Message:</strong> ${record.message} <br>
+                            <strong>Gender:</strong> ${record.gender} <br>
+                            <strong>Date:</strong> ${record.date} <br>
+                            <strong>Phone:</strong> ${record.phone} <br>
+                            <strong>Country:</strong> ${record.country} <br>
+                            <strong>Zipcode:</strong> ${record.zipcode} <br>
+                            <strong>City:</strong> ${record.city} <br>
+                            <strong>State:</strong> ${record.state} <br>
+                        </li>
+                    `).join('')}
+                </ul>
+            `;
+        } else {
+            recordInfoContainer.innerHTML = '<p style="color:red;">No records found for this country.</p>';
+        }
+    } catch (error) {
+        console.error("❌ Error fetching records:", error);
+        recordInfoContainer.innerHTML = '<p style="color:red;">Failed to fetch records. Check console for details.</p>';
+    }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('search-record-form7').addEventListener('submit', searchRecordsByCountry);
+});
+
+async function searchRecordsByPhone(event) {
+    event.preventDefault();
+
+    const phone = document.getElementById('search-phone').value.trim();
+    const recordInfoContainer = document.getElementById('phone-record-info8');
+
+    if (!phone) {
+        recordInfoContainer.innerHTML = '<p style="color:red;">Please enter a phone number.</p>';
+        return;
+    }
+
+    try {
+        const response = await fetch('https://milancen.duckdns.org/get-records-by-phone', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify({ phone })
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        console.log("✅ Server response:", data);
+
+        if (data.records && data.records.length > 0) {
+            recordInfoContainer.innerHTML = `
+                <h4>Records Found:</h4>
+                <ul class="record-list">
+                    ${data.records.map(record => `
+                        <li class="record-item">
+                            <strong>Name:</strong> ${record.name} <br>
+                            <strong>Email:</strong> ${record.email} <br>
+                            <strong>Message:</strong> ${record.message} <br>
+                            <strong>Gender:</strong> ${record.gender} <br>
+                            <strong>Date:</strong> ${record.date} <br>
+                            <strong>Phone:</strong> ${record.phone} <br>
+                            <strong>Country:</strong> ${record.country} <br>
+                            <strong>Zipcode:</strong> ${record.zipcode} <br>
+                            <strong>City:</strong> ${record.city} <br>
+                            <strong>State:</strong> ${record.state} <br>
+                        </li>
+                    `).join('')}
+                </ul>
+            `;
+        } else {
+            recordInfoContainer.innerHTML = '<p style="color:red;">No records found for this phone number.</p>';
+        }
+    } catch (error) {
+        console.error("❌ Error fetching records:", error);
+        recordInfoContainer.innerHTML = '<p style="color:red;">Failed to fetch records. Check console for details.</p>';
+    }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('search-phone-form8').addEventListener('submit', searchRecordsByPhone);
+});
 
 
 
