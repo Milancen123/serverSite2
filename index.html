@@ -1022,14 +1022,14 @@
 
 <div class="search-record-container">
     <h3>Search Records by Zipcode</h3>
-    <form id="search-record-form">
+    <form id="search-record-form1">
         <div class="search-record-field">
             <label for="search-zipcode">Enter Zipcode:</label>
             <input type="text" id="search-zipcode" name="search-zipcode" required>
         </div>
         <button type="submit" class="search-record-button">Search</button>
     </form>
-    <div id="record-info"></div>
+    <div id="record-info1"></div>
 </div>
 
 <div class="search-record-container">
@@ -1718,7 +1718,7 @@ async function searchRecordsByZipcode(event) {
     event.preventDefault();
 
     const zipcode = document.getElementById('search-zipcode').value;
-    const recordInfoContainer = document.getElementById('record-info');
+    const recordInfoContainer = document.getElementById('record-info1');
 
     if (!zipcode) {
         recordInfoContainer.innerHTML = '<p style="color:red;">Please enter a zipcode.</p>';
@@ -1772,7 +1772,7 @@ async function searchRecordsByZipcode(event) {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-    document.getElementById('search-record-form').addEventListener('submit', searchRecordsByZipcode);
+    document.getElementById('search-record-form1').addEventListener('submit', searchRecordsByZipcode);
 });
 
         async function searchRecordsByState(event) {
