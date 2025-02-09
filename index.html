@@ -1034,26 +1034,26 @@
 
 <div class="search-record-container">
     <h3>Search Records by State</h3>
-    <form id="search-record-form">
+    <form id="search-record-form2">
         <div class="search-record-field">
             <label for="search-state">Enter State:</label>
             <input type="text" id="search-state" name="search-state" required>
         </div>
         <button type="submit" class="search-record-button">Search</button>
     </form>
-    <div id="record-info"></div>
+    <div id="record-info2"></div>
 </div>
 
 <div class="search-record-container">
     <h3>Search Records by Date</h3>
-    <form id="search-record-form">
+    <form id="search-record-form3">
         <div class="search-record-field">
             <label for="search-date">Enter Date:</label>
             <input type="date" id="search-date" name="search-date" required>
         </div>
         <button type="submit" class="search-record-button">Search</button>
     </form>
-    <div id="record-info"></div>
+    <div id="record-info3"></div>
 </div>
 
 
@@ -1779,7 +1779,7 @@ document.addEventListener('DOMContentLoaded', () => {
     event.preventDefault();
 
     const state = document.getElementById('search-state').value;
-    const recordInfoContainer = document.getElementById('record-info');
+    const recordInfoContainer = document.getElementById('record-info2');
 
     if (!state) {
         recordInfoContainer.innerHTML = '<p style="color:red;">Please enter a state.</p>';
@@ -1833,14 +1833,14 @@ document.addEventListener('DOMContentLoaded', () => {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-    document.getElementById('search-record-form').addEventListener('submit', searchRecordsByState);
+    document.getElementById('search-record-form2').addEventListener('submit', searchRecordsByState);
 });
 
 async function searchRecordsByDate(event) {
     event.preventDefault();
 
     const date = document.getElementById('search-date').value;
-    const recordInfoContainer = document.getElementById('record-info');
+    const recordInfoContainer = document.getElementById('record-info3');
 
     if (!date) {
         recordInfoContainer.innerHTML = '<p style="color:red;">Please enter a date.</p>';
@@ -1894,7 +1894,7 @@ async function searchRecordsByDate(event) {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-    document.getElementById('search-record-form').addEventListener('submit', searchRecordsByDate);
+    document.getElementById('search-record-form3').addEventListener('submit', searchRecordsByDate);
 });
 
 
