@@ -2746,7 +2746,7 @@ async function createBlog(event) {
         const data = await response.json();
         console.log("✅ Server response:", data);
 
-        if (data.success) {
+        if (data.success2) {
             statusContainer.innerHTML = `<p style="color:green;">Blog post successfully created!</p>`;
             document.getElementById('blog-form').reset();
         } else {
