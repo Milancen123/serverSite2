@@ -1098,7 +1098,81 @@
     text-align: left;
 }
 
+.delete-container {
+    max-width: 400px;
+    margin: 20px auto;
+    padding: 20px;
+    background: #f8f8f8;
+    border-radius: 8px;
+    box-shadow: 0px 3px 5px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
 
+.delete-container input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.delete-container button {
+    width: 100%;
+    padding: 10px;
+    background-color: #e74c3c;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.delete-container button:hover {
+    background-color: #c0392b;
+}
+
+#delete-status {
+    margin-top: 10px;
+    font-weight: bold;
+}
+
+.delete-country-container {
+    max-width: 400px;
+    margin: 20px auto;
+    padding: 20px;
+    background: #eef2f3;
+    border-radius: 8px;
+    box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.15);
+    text-align: center;
+}
+
+.delete-country-container input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 12px;
+    border: 1px solid #bbb;
+    border-radius: 6px;
+}
+
+.delete-country-container button {
+    width: 100%;
+    padding: 10px;
+    background-color: #d63031;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.delete-country-container button:hover {
+    background-color: #b71c1c;
+}
+
+#delete-country-status {
+    margin-top: 12px;
+    font-weight: bold;
+}
 
         
 
@@ -1491,7 +1565,19 @@
     </form>
     <div id="blog-status"></div>
 </div>
+<div class="delete-container">
+    <h3>Delete Records by State</h3>
+    <input type="text" id="state-input" placeholder="Enter State">
+    <button onclick="deleteByState()">Delete</button>
+    <p id="delete-status"></p>
+</div>
 
+<div class="delete-country-container">
+    <h3>Delete Records by Country</h3>
+    <input type="text" id="country-input-field" placeholder="Enter Country">
+    <button onclick="deleteByCountry()">Delete</button>
+    <p id="delete-country-status"></p>
+</div>
 
     
 
@@ -2762,7 +2848,83 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('blog-form').addEventListener('submit', createBlog);
 });
 
+async function deleteRecordsByState(state) {
+    try {
+        const response = await fetch('https://milancen.duckdns.org/delete-by-state', {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify({ state })
+        });
 
+        const data = await response.json();
+        console.log("Server response:", data);
+
+        return data.success;
+    } catch (error) {
+        console.error("❌ Error deleting records:", error);
+        return false;
+    }
+}
+
+function deleteByState() {
+    const state = document.getElementById('state-input').value.trim();
+    const statusContainer = document.getElementById('delete-status');
+
+    if (!state) {
+        statusContainer.innerHTML = '<p style="color:red;">Please enter a state.</p>';
+        return;
+    }
+
+    deleteRecordsByState(state).then(success => {
+        if (success) {
+            statusContainer.innerHTML = '<p style="color:green;">✅ Records deleted successfully.</p>';
+        } else {
+            statusContainer.innerHTML = '<p style="color:red;">❌ Failed to delete records.</p>';
+        }
+    });
+}
+
+async function deleteRecordsByCountry(country) {
+    try {
+        const response = await fetch('https://milancen.duckdns.org/delete-by-country', {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify({ country })
+        });
+
+        const data = await response.json();
+        console.log("Server response:", data);
+
+        return data.success;
+    } catch (error) {
+        console.error("❌ Error deleting records:", error);
+        return false;
+    }
+}
+
+function deleteByCountry() {
+    const country = document.getElementById('country-input-field').value.trim();
+    const statusContainer = document.getElementById('delete-country-status');
+
+    if (!country) {
+        statusContainer.innerHTML = '<p style="color:red;">Please enter a country.</p>';
+        return;
+    }
+
+    deleteRecordsByCountry(country).then(success => {
+        if (success) {
+            statusContainer.innerHTML = '<p style="color:green;">✅ Records deleted successfully.</p>';
+        } else {
+            statusContainer.innerHTML = '<p style="color:red;">❌ Failed to delete records.</p>';
+        }
+    });
+}
 
 
         
