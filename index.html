@@ -1621,12 +1621,12 @@
                 });
 
                 if (response.ok) {
-                    alert("Message sent successfully!");
+                    alert("Record inserted in the database!");
                     event.target.reset();
                     fetchRecords();
                     fetchDistinctCountries();
                 } else {
-                    alert("Failed to send message. Please try again.");
+                    alert("Failed to insert record in the database. Please try again.");
                 }
             } catch (error) {
                 alert("Error: " + error.message);
